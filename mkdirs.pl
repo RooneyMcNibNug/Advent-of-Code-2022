@@ -4,5 +4,5 @@ use strict;
 my @d = (1..31);
 
 foreach(@d){
-    system ("mkdir -p $_/.gitkeepdir")
+    system ("mkdir -p $_/README.md")
 }
