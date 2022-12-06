@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use List::Utils qw(intersect);
+use List::Util qw(intersect);
 
 open(my $fh, "<", "input.txt") or die "Cannot open input.txt: $!";
 my @lines = <$fh>;
