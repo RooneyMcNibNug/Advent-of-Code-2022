@@ -1,16 +1,31 @@
-my @stacks = ( [ "Z", "N" ], [ "M", "C", "D" ], [ "P" ] );
-my @moves = ( [1, 2, 1 ], [ 3, 1, 3 ] , [ 2, 2, 1 ], [1, 1, 2 ] );
+use strict;
+use warnings;
+use experimental 'signatures';
+use experimental 'lexical_subs';
 
-sub moveCrates {
-    my ($stacks, $move ) = @_;
-    my ( $n, $from, $to ) = @$move;
-    $from = $stacks->[$from - 1];
-    $to = $stacks->[$to - 1];
-    my $height = @$from;
-    push(@$to, reverse(splice(@$from, $height - $n, $n)))
+@ARGV = "input.txt" unless @ARGV; # cool, I learned something new :)
+my @stacks1;
+my @stacks2;
+
+while (<>) {
+    last if /^\s*1/;
+    my $i = 1;
+    while (/(?:   |\[([A-Z])\]) ?/g) {
+        unshift @{$stacks1 [$i]} => $1 if $1;
+        unshift @{$stacks2 [$i]} => $1 if $1;
+        $i ++;
+    }
 }
 
-moveCrates( \@stacks, $_) for @moves;
+<>;
 
-# if a stack is empty, print a space character
-print @$_ ? $_->[-1] : ' ' for @stacks
+while (<>) {
+    my ($amount, $from, $to) = /[0-9]+/g;
+    push @{$stacks1 [$to]} => pop    @{$stacks1 [$from]} for 1 .. $amount;
+    push @{$stacks2 [$to]} => splice @{$stacks2 [$from]},       - $amount;
+}
+
+print "Part 1: ", join "" => map {$$_ [-1]} @stacks1 [1 .. $#stacks1];
+print "\n";
+print "Part 2: ", join "" => map {$$_ [-1]} @stacks2 [1 .. $#stacks2];
+print "\n";
